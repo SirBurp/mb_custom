@@ -48,7 +48,7 @@ RegisterNetEvent('mb_custom:requestVehicleParts', function(netId, parts)
     local _s = source
     local vehicle = NetworkGetEntityFromNetworkId(netId)
     print('Request vehicle parts for netId ', netId, ' entity ', vehicle)
-    print('Parts :', json.encode(parts, {indent = true}))
+    --print('Parts :', json.encode(parts, {indent = true}))
     if not vehicle or vehicle == 0 then return end
 
     local state = Entity(vehicle).state

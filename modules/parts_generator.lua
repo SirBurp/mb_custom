@@ -1,4 +1,5 @@
 local PartsGenerator = {}
+local handling = lib.load('config.handlingdata')
 
 function PartsGenerator.GenerateVehicleParts(vehicle)
     if not DoesEntityExist(vehicle) then return end
@@ -30,6 +31,28 @@ function PartsGenerator.GenerateVehicleParts(vehicle)
     end
 
     return parts
+end
+
+function PartsGenerator.applyIVHandling(vehicle)
+    if not DoesEntityExist(vehicle) then return end
+    local multipliers = handling.model[GetEntityModel(vehicle)] and handling.model[GetEntityModel(vehicle)] or
+        handling.class[GetVehicleClass(vehicle)] and handling.class[GetVehicleClass(vehicle)] or handling.default
+    print('Applying IV handling multipliers:', json.encode(multipliers, {indent = true}))
+    for handlingField, values in pairs(multipliers) do
+        if values.defaultMultiplier then
+            local currentValue = GetVehicleHandlingFloat(vehicle, 'CHandlingData', handlingField)
+            local newValue = currentValue * values.defaultMultiplier
+            SetVehicleHandlingFloat(vehicle, 'CHandlingData', handlingField, newValue)
+        elseif values.defaultOffset then
+            local currentValue = GetVehicleHandlingVector(vehicle, 'CHandlingData', handlingField)
+            local newValue = vector3(
+                currentValue.x + values.defaultOffset.x,
+                currentValue.y + values.defaultOffset.y,
+                currentValue.z + values.defaultOffset.z
+            )
+            SetVehicleHandlingVector(vehicle, 'CHandlingData', handlingField, newValue)
+        end
+    end
 end
 
 return PartsGenerator

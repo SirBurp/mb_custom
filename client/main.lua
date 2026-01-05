@@ -20,6 +20,8 @@ lib.onCache('vehicle', function(vehicle)
         local props = lib.getVehicleProperties(vehicle)
         local parts = PartsGenerator.GenerateVehicleParts(vehicle)
 
+        PartsGenerator.applyIVHandling(vehicle)
+
         TriggerServerEvent('mb_custom:requestVehicleParts', NetworkGetNetworkIdFromEntity(vehicle), parts)
     end
 end)
@@ -57,7 +59,7 @@ Citizen.CreateThread(function()
                 return true
             end,
             onSelect = function(data)
-                require 'modules..menu.menu_vehiclepart'(data.entity)                
+                require 'modules.menu.menu_vehiclepart'(data.entity)                
             end
         },
         {
