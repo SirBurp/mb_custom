@@ -19,6 +19,7 @@ files {
     'config/*.lua',
     'locales/*.json',
     'modules/*.lua',
+    'modules/menu/*.lua',
 }
 
 dependencies {

@@ -34,7 +34,9 @@ AddStateBagChangeHandler('vehicleParts', nil, function(bagName, key, parts)
         controller = Vehicle:new(entity)
         Controllers[net] = controller
     end
-    print('parts:', json.encode(parts, {indent = true}))
+    --print('parts:', json.encode(parts, {indent = true}))
+    local handlings = controller:GenerateIVHandlings()
+    --print('handlings:', json.encode(handlings, {indent = true}))
     --controller:SetParts(parts)
     --controller:ApplyPartsHandling()
 end)
@@ -55,7 +57,7 @@ Citizen.CreateThread(function()
                 return true
             end,
             onSelect = function(data)
-                require 'modules.menu_vehiclepart'(data.entity)                
+                require 'modules..menu.menu_vehiclepart'(data.entity)                
             end
         },
         {
@@ -82,8 +84,9 @@ Citizen.CreateThread(function()
                 return true
             end,
             onSelect = function(data)
-                local handling = functions:GetVehicleHandlings(data.entity)
-                print(json.encode(handling, {indent = true}))              
+                require 'modules.menu.menu_handling'(data.entity)
+                --local handling = functions:GetVehicleHandlings(data.entity)
+                --print(json.encode(handling, {indent = true}))              
             end
         }
     })

@@ -10,7 +10,7 @@ function PartsGenerator.GenerateVehicleParts(vehicle)
     local parts = {
         
         wheels = {
-            type = props.wheels,
+            style = props.wheels,
             index = isBike and props.modBackWheels or props.modFrontWheels,
             label = isBike and GetLabelText(GetModTextLabel(vehicle, 24, props.modBackWheels)) or
                 GetLabelText(GetModTextLabel(vehicle, 23, props.modFrontWheels)),
@@ -31,3 +31,5 @@ function PartsGenerator.GenerateVehicleParts(vehicle)
 
     return parts
 end
+
+return PartsGenerator
