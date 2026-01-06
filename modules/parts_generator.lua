@@ -35,9 +35,14 @@ end
 
 function PartsGenerator.applyIVHandling(vehicle)
     if not DoesEntityExist(vehicle) then return end
-    local multipliers = handling.model[GetEntityModel(vehicle)] and handling.model[GetEntityModel(vehicle)] or
-        handling.class[GetVehicleClass(vehicle)] and handling.class[GetVehicleClass(vehicle)] or handling.default
-    print('Applying IV handling multipliers:', json.encode(multipliers, {indent = true}))
+    local multipliers = handling.default
+	local class = GetVehicleClass(vehicle)
+	local model =  GetEntityModel(vehicle)
+	
+	if #handling.class[class] > 0 then multipliers = handling.class[class] print('Class', class) end
+	if #handling.model[model] > 0 then multipliers = handling.model[model] print('Model', model) end
+		
+    print('Applying IV handling multipliers')
     for handlingField, values in pairs(multipliers) do
         if values.defaultMultiplier then
             local currentValue = GetVehicleHandlingFloat(vehicle, 'CHandlingData', handlingField)

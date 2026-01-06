@@ -57,7 +57,7 @@ local handlingData = {
         part = 'wheels',
         defaultMultiplier = 1.20
     },
-    ['fIntialDragCoeff'] = {
+    ['fInitialDragCoeff'] = {
         name = 'Initial Drag Coefficient',
         type = 'float',
         part = 'wheels',
@@ -146,7 +146,7 @@ local Handling = {
             part = 'wheels',
             defaultMultiplier = 1.20
         },
-        ['fIntialDragCoeff'] = {
+        ['fInitialDragCoeff'] = {
             name = 'Initial Drag Coefficient',
             type = 'float',
             part = 'wheels',
@@ -208,28 +208,28 @@ local Handling = {
                 ['fTractionCurveMin'] = 1.00,
                 ['fTractionLossMult'] = 1.00,
                 ['fLowSpeedTractionLossMult'] = 1.00,
-                ['fIntialDragCoeff'] = 1.00,
+                ['fInitialDragCoeff'] = 1.00,
             },
             sport = {
                 ['fTractionCurveMax'] = 1.04,
                 ['fTractionCurveMin'] = 1.03,
                 ['fTractionLossMult'] = 0.96,
                 ['fLowSpeedTractionLossMult'] = 0.92,
-                ['fIntialDragCoeff'] = 1.01,
+                ['fInitialDragCoeff'] = 1.01,
             },
             slick = {
                 ['fTractionCurveMax'] = 1.08,
                 ['fTractionCurveMin'] = 1.06,
                 ['fTractionLossMult'] = 0.92,
                 ['fLowSpeedTractionLossMult'] = 0.88,
-                ['fIntialDragCoeff'] = 1.02,
+                ['fInitialDragCoeff'] = 1.02,
             },
             offroad = {
                 ['fTractionCurveMax'] = 0.96,
                 ['fTractionCurveMin'] = 0.94,
                 ['fTractionLossMult'] = 1.08,
                 ['fLowSpeedTractionLossMult'] = 1.10,
-                ['fIntialDragCoeff'] = 1.03,
+                ['fInitialDragCoeff'] = 1.03,
             },
         },
     },
