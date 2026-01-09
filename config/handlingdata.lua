@@ -150,7 +150,7 @@ local Handling = {
             name = 'Initial Drag Coefficient',
             type = 'float',
             part = 'wheels',
-            defaultMultiplier = 0.90
+            defaultMultiplier = 1.10
         },
 
         --Braking

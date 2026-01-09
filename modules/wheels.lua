@@ -3,7 +3,7 @@ local Tyres = lib.load('config.handlingdata').parts.wheels
 local Wheels = {}
 
 local function WearCurve(x)
-    return 0.5 * (x ^ 1.5) * 0.5
+    return 0.5 + (x ^ 1.5) * 0.5
 end
 
 local function PressureFactor(p)
@@ -12,7 +12,7 @@ local function PressureFactor(p)
     return 1.0 - (diff / 0.6) * 0.08
 end
 
-function Wheels:ComputeHandling(data)
+function Wheels.ComputeHandling(data)
     if data.tyreCount == 0 then return {} end
     local acc = {
         curveMax = 0.0,
@@ -29,29 +29,30 @@ function Wheels:ComputeHandling(data)
         acc.curveMin = acc.curveMin + gradeData['fTractionCurveMin']
         acc.lossMult = acc.lossMult + gradeData['fTractionLossMult']
         acc.lowSpeedLoss = acc.lowSpeedLoss + gradeData['fLowSpeedTractionLossMult']
-        acc.dragCoeff = acc.dragCoeff + gradeData['fIntialDragCoeff']
+        acc.dragCoeff = acc.dragCoeff + gradeData['fInitialDragCoeff']
         acc.presureFactor = acc.presureFactor + PressureFactor(tyre.presure) 
     end
+
+    
     -- Average
-    for k in pairs(acc) do
-        acc[k] = acc[k] / data.tyreCount
+    for k, v in pairs(acc) do
+        acc[k] = v / data.tyreCount
     end
-
     -- Apply wear
-    local avgHealth = data.globalHealth / data.tyreCount
-    local healthNorm = math.min(math.max(avgHealth / 1000.0, 0.0), 1.0)
-    local wearFactor = WearCurve(1.0 - healthNorm)
-
+    local avgHealth = data.globalHealth / (data.tyreCount * 1000.0)
+    local healthNorm = lib.math.clamp(avgHealth, 0.0, 1.0)
+    local wearFactor = WearCurve(healthNorm)
+    --print('Tyre handling wear factor:', wearFactor, ' avgHealth:', avgHealth, ' healthNorm:', healthNorm)
     -- Apply pressure
-    local presureFactor = acc.presureFactor / data.tyreCount
-    local finalFactor = wearFactor * presureFactor
+    local finalFactor = lib.math.clamp(wearFactor * acc.presureFactor, 0.55, 1.0)
+    --print('Tyre handling final factor:', wearFactor, acc.presureFactor, finalFactor)
 
     return {
-        fTractionCurveMax = acc.curveMax * finalFactor,
-        fTractionCurveMin = acc.curveMin * finalFactor,        
-        fTractionLossMult = acc.lossMult * finalFactor,
-        fLowSpeedTractionLossMult = acc.lowSpeedLoss * finalFactor,
-        fIntialDragCoeff = acc.dragCoeff * finalFactor,
+        ['fTractionCurveMax'] = acc.curveMax * finalFactor,
+        ['fTractionCurveMin'] = acc.curveMin * finalFactor,        
+        ['fTractionLossMult'] = acc.lossMult * finalFactor,
+        ['fLowSpeedTractionLossMult'] = acc.lowSpeedLoss * finalFactor,
+        ['fInitialDragCoeff'] = acc.dragCoeff * (1.0 + (1.0 - finalFactor) * 0.3),
     }
 end
 

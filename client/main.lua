@@ -35,12 +35,11 @@ AddStateBagChangeHandler('vehicleParts', nil, function(bagName, key, parts)
     if not controller then
         controller = Vehicle:new(entity)
         Controllers[net] = controller
+        print('Created Vehicle controller for netId ', net)
     end
-    --print('parts:', json.encode(parts, {indent = true}))
-    local handlings = controller:GenerateIVHandlings()
-    --print('handlings:', json.encode(handlings, {indent = true}))
-    --controller:SetParts(parts)
-    --controller:ApplyPartsHandling()
+    print('tyres:', json.encode(parts.wheels.tyres, {indent = true}))
+    controller:SetParts(parts)
+    controller:ApplyPartsHandling()
 end)
 
 
