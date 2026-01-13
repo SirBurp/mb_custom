@@ -76,7 +76,7 @@ local function getVehicleModMenu(vehicle)
     
     secondarys['Vanity'] = {}
     if GetVehicleMod(vehicle, 48) ~= -1 then                -- Livery
-        print('Livery Found')
+        lib.print.debug('Livery Found')
         local mod = vanity[48]
         local lvl = GetVehicleMod(vehicle, 48)
         mod.lvl_label = GetLiveryName(vehicle, lvl) 
@@ -92,7 +92,7 @@ local function getVehicleModMenu(vehicle)
         }
     end
     if GetVehicleXenonLightsColour(vehicle) ~= 255 then     -- Xenon Color
-        print('Xenon Color Found')
+        lib.print.debug('Xenon Color Found')
         local mod = vanity[22]
         local color = GetVehicleXenonLightsColour(vehicle)
         mod.lvl_label = color 
@@ -122,7 +122,7 @@ local function getVehicleModMenu(vehicle)
         }
     end
     if GetVehicleWindowTint(vehicle) > 0 then             -- Window Tint
-        print('Window Tint Found', GetVehicleWindowTint(vehicle))
+        lib.print.debug('Window Tint Found', GetVehicleWindowTint(vehicle))
         local mod = vanity[102]
         local tint = GetVehicleWindowTint(vehicle)
         mod.lvl_label = mod.label .. ': ' .. locale('labels.window_tint.'..tint)
@@ -137,7 +137,7 @@ local function getVehicleModMenu(vehicle)
         }
     end
     if functions:GetAnyNeonEnabled(vehicle) then         -- Neon Color
-        print('Neon Color Found')
+        lib.print.debug('Neon Color Found')
         local r, g, b = GetVehicleNeonLightsColour(vehicle)
         local mod = vanity[103]
         mod.lvl_label = mod.label .. ': (' ..r.. ', ' ..g.. ', ' ..b.. ')'
@@ -198,6 +198,7 @@ local function getVehicleEstetics(vehicle)
         ::skip::
     end
     
+    -- Check especial estetics and add category if any found
     if props.modLibery or props.modXenon or props.plateIndex or props.windowTint or props.neonEnabled  then
         secondarys[especial.category] = {}
         main[especial.category] = {
@@ -254,7 +255,7 @@ local function openVehiclePartsMenu(vehicle)
 
     local modable = functions:SetVehicleModKit(vehicle)
     --if not modable then lib.notify({title = locale('vehicle_parts'), description = locale('unable_mod_vehicle'), type = 'error'}) return end
-    local main, secondarys = getVehicleModMenu(vehicle)
+    local main, secondarys = getVehicleModMenu(vehicle) --getVehicleModMenu(vehicle)
     
     for k, v in pairs(secondarys) do
         lib.registerContext({

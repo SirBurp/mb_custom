@@ -126,13 +126,13 @@ local Handling = {
             name = 'Traction Curve Max',
             type = 'float',
             part = 'wheels',
-            defaultMultiplier = 0.80
+            defaultMultiplier = 1.10
         },
         ['fTractionCurveMin'] = {
             name = 'Traction Curve Min',
             type = 'float',
             part = 'wheels',
-            defaultMultiplier = 1.10
+            defaultMultiplier = 0.80
         },
         ['fTractionLossMult'] = {
             name = 'Traction Loss Multiplier',
@@ -202,7 +202,9 @@ local Handling = {
     },
 
     parts = {
+        
         wheels = {
+            defaultPressure = 2.2,
             street = {
                 ['fTractionCurveMax'] = 1.00,
                 ['fTractionCurveMin'] = 1.00,
@@ -231,6 +233,21 @@ local Handling = {
                 ['fLowSpeedTractionLossMult'] = 1.10,
                 ['fInitialDragCoeff'] = 1.03,
             },
+        },
+        odometer = {
+            -- Default odometer-related settings. Adjust to tune wear behavior.
+            default = {
+                -- Amount of tyre *health* (0..1000) lost per KM driven. Example: 0.1 -> 0.1 health per km.
+                wearPerKm = 0.1,
+                -- Max meters per second the server will accept in a single report (anti-spoof)
+                maxMetersPerSecond = 1500.0,
+                -- Minimum seconds between reports for the same vehicle (throttle)
+                reportThrottleSeconds = 10,
+                -- Minimum meters to accumulate on client before reporting (reduces chatter)
+                reportMinMeters = 1000,
+                -- Sampling interval in seconds for client odometer loop
+                sampleIntervalSeconds = 1,
+            }
         },
     },
 }

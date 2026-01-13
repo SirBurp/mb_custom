@@ -3,7 +3,7 @@ local Tyres = lib.load('config.handlingdata').parts.wheels
 local Wheels = {}
 
 local function WearCurve(x)
-    return 0.5 + (x ^ 1.5) * 0.5
+    return lib.math.round(0.5 + (x ^ 1.5) * 0.5, 4)
 end
 
 local function PressureFactor(p)
@@ -20,7 +20,7 @@ function Wheels.ComputeHandling(data)
         lossMult = 0.0,
         lowSpeedLoss = 0.0,
         dragCoeff = 0.0,
-        presureFactor = 0.0
+        pressureFactor = 0.0
     }
 
     for _, tyre in pairs(data.tyres) do
@@ -30,7 +30,7 @@ function Wheels.ComputeHandling(data)
         acc.lossMult = acc.lossMult + gradeData['fTractionLossMult']
         acc.lowSpeedLoss = acc.lowSpeedLoss + gradeData['fLowSpeedTractionLossMult']
         acc.dragCoeff = acc.dragCoeff + gradeData['fInitialDragCoeff']
-        acc.presureFactor = acc.presureFactor + PressureFactor(tyre.presure) 
+        acc.pressureFactor = acc.pressureFactor + PressureFactor(tyre.pressure) 
     end
 
     
@@ -42,18 +42,22 @@ function Wheels.ComputeHandling(data)
     local avgHealth = data.globalHealth / (data.tyreCount * 1000.0)
     local healthNorm = lib.math.clamp(avgHealth, 0.0, 1.0)
     local wearFactor = WearCurve(healthNorm)
-    --print('Tyre handling wear factor:', wearFactor, ' avgHealth:', avgHealth, ' healthNorm:', healthNorm)
+    --lib.print.debug('Tyre handling wear factor:', wearFactor, ' avgHealth:', avgHealth, ' healthNorm:', healthNorm)
     -- Apply pressure
-    local finalFactor = lib.math.clamp(wearFactor * acc.presureFactor, 0.55, 1.0)
-    --print('Tyre handling final factor:', wearFactor, acc.presureFactor, finalFactor)
+    local finalFactor = lib.math.clamp(wearFactor * acc.pressureFactor, 0.55, 1.0)
+    lib.print.debug('Tyre handling final factor:', wearFactor, acc.pressureFactor, finalFactor)
 
     return {
-        ['fTractionCurveMax'] = acc.curveMax * finalFactor,
-        ['fTractionCurveMin'] = acc.curveMin * finalFactor,        
+        ['fTractionCurveMax'] = acc.curveMax * (1.0 + (1.0 - finalFactor) * 20.0),     --aumetar con el desgaste
+        ['fTractionCurveMin'] = acc.curveMin * finalFactor,                             --reducir con el desgaste
         ['fTractionLossMult'] = acc.lossMult * finalFactor,
-        ['fLowSpeedTractionLossMult'] = acc.lowSpeedLoss * finalFactor,
-        ['fInitialDragCoeff'] = acc.dragCoeff * (1.0 + (1.0 - finalFactor) * 0.3),
+        ['fLowSpeedTractionLossMult'] = acc.lowSpeedLoss *  (1.0 + (1.0 - finalFactor) * 20.0),
+        ['fInitialDragCoeff'] = acc.dragCoeff * (1.0 + (1.0 - finalFactor) * 20.0),
     }
 end
+
+-- Expose helpers for testing
+Wheels._WearCurve = WearCurve
+Wheels._PressureFactor = PressureFactor
 
 return Wheels

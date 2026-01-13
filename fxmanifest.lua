@@ -20,6 +20,8 @@ files {
     'locales/*.json',
     'modules/*.lua',
     'modules/menu/*.lua',
+    'modules/parts/*.lua',
+    'tests/*.lua',
 }
 
 dependencies {
